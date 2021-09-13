@@ -1,5 +1,6 @@
 {
-  "name": "cnft-scraper",
+  "homepage": "https://github.com/Zingers-ZA/CCScraper",
+  "name": "CCScraper",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
