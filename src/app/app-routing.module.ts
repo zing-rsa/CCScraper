@@ -4,8 +4,7 @@ import { AppComponent } from './app.component'
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/CCSCraper', pathMatch:'full'},
-  { path: 'CCSCraper', component: AppComponent },
+  { path: '', component: AppComponent }
 ];
 
 @NgModule({
