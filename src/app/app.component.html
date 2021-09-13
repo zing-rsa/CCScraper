@@ -11,46 +11,47 @@
     </div>
   </div>
   <div class="toolbar-fields">
-    <div class='field-container'>
-      <label>Sort By:</label>
-      <select [value]="sort" (change)="changeParams()">
-        <option>Date</option>
-        <option>Price</option>
-      </select>
-    </div>
-    <div class='field-container'>
-      <label>Order:</label>
-      <select [value]="sortOrder" (change)="changeParams()">
-        <option>Asc</option>
-        <option>Desc</option>
-      </select>
-    </div>
-    <div class='field-container'>
-      <label>Price Min:</label>
-      <input (keyup)="onKeyMin($event)" (change)="changeParams()"> <br>
-    </div>
-    <div class='field-container'>
-      <label>Price Max:</label>
-      <input (keyup)="onKeyMax($event)" (change)="changeParams()"> <br>
+
+    <label>Search Criteria:</label>
+    <div class="field-group">
+      <div class='field-container'>
+        <label>Sort By:</label>
+        <select (change)="selectSortOption($event.target.value); clear()">
+          <option selected value="date">Date</option>
+          <option value="price">Price</option>
+        </select>
+      </div>
+      <div class='field-container'>
+        <label>Order:</label>
+        <select (change)="selectOrderOption($event.target.value); clear()">
+          <option selected value="asc" >Asc</option>
+          <option value='desc'>Desc</option>
+        </select>
+      </div>
+      <div class='field-container'>
+        <label>Price Min:</label>
+        <input (keyup)="onKeyMin($event)" (change)="clear()"> <br>
+      </div>
+      <div class='field-container'>
+        <label>Price Max:</label>
+        <input (keyup)="onKeyMax($event)" (change)="clear()"> <br>
+      </div>
     </div>
 
-    <div class='field-container'>
-      <label>Max Unit#:</label>
-      <input (keyup)="onKeyMaxUnit($event)" (change)="changeParams()"> <br>
+    <label>Filter Results:</label>
+    <div class="field-group">
+      <div class='field-container'>
+        <label>Must include:</label>
+        <button (click)="toggleCheckboxList()">...</button><br>
+      </div>
     </div>
-
-    <div class='field-container'>
-      <label>Must include:</label>
-      <button (click)="toggleCheckboxList()">...</button><br>
-    </div>
-  
-    <button (click)="search()">Search</button><br>
   </div>
 
-</div>
+  <button (click)="search()">Search</button><br>
 
+</div>
 <div id='container' class="container" >
-    <div *ngFor="let asset of this.displayedListings" class='listing-card' (click)="openLink(asset.id)">
+    <div *ngFor="let asset of this.listings | cardFilter: this.showAll:this.filterList:this.sort:this.sortOrder" class='listing-card' (click)="openLink(asset.id)">
         <div class='listing-card-details'>
           <div>{{asset.name}}</div>
           <div>{{asset.price}}ADA</div>
@@ -69,4 +70,10 @@
       <div class="dot"></div>
       <div class="dot"></div>
     </div>
+</div>
+
+<div class='footer'>
+  <span>If you found any good deals, support is greatly appreciated!</span><br>
+  <span>addr1q9mek78dslzjmy4dgfyh9u4htvk06rhh7lzxxz6aspfcecl50k8cjs683mfjajv70c7y77npdnyl7lskqj78ku56432s6ju7jk</span><br>
+  <span>Dm for features/bugs. Discord: zing#0908. Twitter: <a href="https://twitter.com/zing_________">@zing_________</a></span><br>
 </div>

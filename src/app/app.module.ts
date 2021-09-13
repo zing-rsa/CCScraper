@@ -5,11 +5,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { CardFilterPipe } from './core/pipes/card-filter.pipe';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CardFilterPipe
   ],
   imports: [
     BrowserModule,

@@ -12,12 +12,11 @@ export class AppComponent {
   
   // Form fields
   public searchTerm = "CardanoCity";
-  public sort = "Date";
-  public sortOrder = "Asc";
+  public sort = "date";
+  public sortOrder = "asc";
   public priceMin = '';
   public priceMax = '';
   public nextPage = 1;
-  public maxunit = 50000;
 
   public listings = [];
   public count = 0; 
@@ -25,6 +24,7 @@ export class AppComponent {
 
   public itemList;
   public filters = {};
+  public filterList = [];
   public showAll = true;
   public displayedListings = [];
   
@@ -51,13 +51,12 @@ export class AppComponent {
 
     var self = this;
     setInterval(function(){
-      console.log(self.showAll)
       if (((self.nextPage-1)*(Math.floor(25/(self.container.offsetWidth/320))*100) - self.container.scrollTop < (document.documentElement.clientHeight) * 0.8 
         && self.listings.length < self.count ) || self.nextPage == 1 || (!self.showAll && self.processedResults < self.count)) {
         if (!self.loading){
           self.loading = true;
-          self.nextPage++;
           self.getListings()
+          self.nextPage++;
           self.loading = false;
         }
       }
@@ -66,8 +65,17 @@ export class AppComponent {
 
   public updateFilterList(item){
     this.filters[item] = !this.filters[item]
+    if (this.filters[item]){
+      this.filterList.push(item)
+    } else {
+      for (let itemName of this.filterList){
+        if (itemName == item){
+          this.filterList.splice(this.filterList.indexOf(itemName), 1)
+          break;
+        }
+      }
+    }
     this.updateShowAll();
-    this.applyFilters();
   }
 
   public updateShowAll(){
@@ -90,11 +98,14 @@ export class AppComponent {
   }
 
   public search() {
+    this.clear()
+    this.getListings()
+  }
+
+  public clear(){
     this.nextPage = 1;
     this.listings = [];
-    this.displayedListings = [];
     this.processedResults = 0;
-    this.getListings()
   }
 
   public async getListings(){
@@ -110,25 +121,13 @@ export class AppComponent {
     var postResponse = await this.cnftService.getListings(options);
       this.count = postResponse.found
       this.listings = this.listings.concat(this.parseListings(postResponse))
-      this.applyFilters()
-  }
-
-  public applyFilters(){
-    this.displayedListings = [];
-    for(let asset of this.listings){
-      for (let item of asset.items){
-        if (this.filters[item.name] || this.showAll){
-          this.displayedListings.push(asset)
-          break;
-        }
-      }
-    }
   }
 
   private parseListings(listings){
     var assets = []
     for (let asset of listings.assets) {
       this.processedResults++;
+
       var newAsset = {
         id : asset.id,
         name: asset.metadata.files[0].name,
@@ -168,15 +167,13 @@ export class AppComponent {
     }
   }
 
-  public changeParams(){
-    this.nextPage = 1;
-  }
-
   public toggleCheckboxList(){
     this.showCheckBox = !this.showCheckBox;
   }
 
   onKeyMin(event) {this.priceMin = event.target.value;}
   onKeyMax(event) {this.priceMax = event.target.value;}
-  onKeyMaxUnit(event) {this.maxunit = event.target.value;}
+
+  selectSortOption(value) {this.sort = value};
+  selectOrderOption(value) {this.sortOrder = value};
 }

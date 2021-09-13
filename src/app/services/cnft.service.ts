@@ -22,7 +22,6 @@ export class CnftService {
             headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
             responseType: 'json' as const
         }
-
         return await this.http.post<any>(path, body, headers)
           .pipe(
             catchError(this.handleError)
@@ -3635,8 +3634,8 @@ export class CnftService {
 
     private buildBody(options) {
         return 'search=cardanocity' +
-            '&sort=' + options.sort.toLowerCase() +
-            '&order=' + options.sortOrder.toLowerCase() +
+            '&sort=' + options.sort +
+            '&order=' + options.sortOrder +
             '&page=' + options.page +
             '&pricemin=' + (options.priceMin != null && options.priceMin != '' ? options.priceMin : 0) +
             '&pricemax=' + (options.priceMax != null && options.priceMax != '' ? options.priceMax : 999999999999999) +
