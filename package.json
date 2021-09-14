@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy": "ng build --prod --base-href https://Zingers-ZA.github.io/ --deploy-url CCScraper/"
+    "deploy": "ng build --prod --base-href https://Zingers-ZA.github.io/CCScraper/"
   },
   "private": true,
   "dependencies": {
