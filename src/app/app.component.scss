@@ -67,6 +67,17 @@
     overflow-x: hidden;
 }
 
+.fetch-failed {
+  color:red;
+  text-align:center;
+}
+
+.warning-icon {
+  content: "\26A0";
+  font-size: 50px;
+  vertical-align: middle;
+}
+
 .listing-card {
     height:100px;
     width:300px;

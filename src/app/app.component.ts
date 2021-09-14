@@ -13,14 +13,15 @@ export class AppComponent {
   // Form fields
   public searchTerm = "CardanoCity";
   public sort = "date";
-  public sortOrder = "asc";
+  public sortOrder = "desc";
   public priceMin = '';
   public priceMax = '';
   public nextPage = 1;
 
   public listings = [];
-  public count = 0; 
+  public count = null; 
   public processedResults = 0;
+  public fetchFailed = false;
 
   public itemList;
   public filters = {};
@@ -104,6 +105,7 @@ export class AppComponent {
 
   public clear(){
     this.nextPage = 1;
+    this.count = null;
     this.listings = [];
     this.processedResults = 0;
   }
@@ -118,9 +120,14 @@ export class AppComponent {
       page: this.nextPage
     }
 
-    var postResponse = await this.cnftService.getListings(options);
+    try {
+      var postResponse = await this.cnftService.getListings(options);
       this.count = postResponse.found
       this.listings = this.listings.concat(this.parseListings(postResponse))
+      this.fetchFailed = false;
+    } catch (Exception){
+      this.fetchFailed = true;
+    }
   }
 
   private parseListings(listings){

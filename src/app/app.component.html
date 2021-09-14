@@ -24,8 +24,8 @@
       <div class='field-container'>
         <label>Order:</label>
         <select (change)="selectOrderOption($event.target.value); clear()">
-          <option selected value="asc" >Asc</option>
-          <option value='desc'>Desc</option>
+          <option value="asc" >Asc</option>
+          <option selected value='desc'>Desc</option>
         </select>
       </div>
       <div class='field-container'>
@@ -65,10 +65,14 @@
           </div>
         </div>
     </div>
-    <div class="loading-dots" *ngIf="this.processedResults < this.count">
+    <div class="loading-dots" *ngIf="(this.processedResults < this.count || this.count == null) && !this.fetchFailed">
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
+    </div>
+    <div class="fetch-failed" *ngIf="this.fetchFailed">
+      <span>Fetching data failed</span>
+      <span class='warning-icon'>&#9888;</span>
     </div>
 </div>
 
