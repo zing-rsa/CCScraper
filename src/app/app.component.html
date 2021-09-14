@@ -16,25 +16,25 @@
     <div class="field-group">
       <div class='field-container'>
         <label>Sort By:</label>
-        <select (change)="selectSortOption($event.target.value); clear()">
+        <select (change)="selectSortOption($event.target.value)">
           <option selected value="date">Date</option>
           <option value="price">Price</option>
         </select>
       </div>
       <div class='field-container'>
         <label>Order:</label>
-        <select (change)="selectOrderOption($event.target.value); clear()">
+        <select (change)="selectOrderOption($event.target.value)">
           <option value="asc" >Asc</option>
           <option selected value='desc'>Desc</option>
         </select>
       </div>
       <div class='field-container'>
         <label>Price Min:</label>
-        <input (keyup)="onKeyMin($event)" (change)="clear()"> <br>
+        <input (keyup)="onKeyMin($event)"> <br>
       </div>
       <div class='field-container'>
         <label>Price Max:</label>
-        <input (keyup)="onKeyMax($event)" (change)="clear()"> <br>
+        <input (keyup)="onKeyMax($event)"> <br>
       </div>
     </div>
 
