@@ -1,39 +1,45 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { filter } from 'rxjs/operators';
 
 @Pipe({
-  name: 'cardFilter'
+  name: 'cardFilter',
+  pure: false
 })
 export class CardFilterPipe implements PipeTransform {
 
-  transform(assets, showAll, filters, sortBy, order): unknown {
+  transform(assets, filters, sort, order): unknown {
     
     var out = [];
 
-    if (showAll){
-      return assets;
-    }
+    if (filters.length == 0){
+      out = assets;
+    } else {
 
-    var count = 0;
-    for (let asset of assets){
-      count = 0;
-      for (let item of asset.items){
-        for (let filter of filters){
-          if (filter == item.name){
-            count++
+      var count = 0;
+      for (let asset of assets){
+        count = 0;
+        for (let item of asset.items){
+          for (let filter of filters){
+            if (filter == item.name){
+              count++
+            }
           }
         }
-      }
-      if (count == filters.length){
-        out.push(asset)
+        if (count == filters.length){
+          out.push(asset)
+        }
       }
     }
 
-
-    //if (sortBy == "Price" && order == "Desc"){
-    //  return out.sort((a, b) => a.price - b.price )
-    //} else if (sortBy == "Price" && order == "Asc"){
-    //  return out.sort((a, b) => b.price - a.price )
-    //}
+    if (sort == 'unitNo'){
+      if(order == 'asc') {
+        out.sort((a, b) => a.name.replace('Unit', '') - b.name.replace('Unit', ''))
+      } else {
+        out.sort((a, b) => b.name.replace('Unit', '') - a.name.replace('Unit', ''))
+      }
+      
+    }
 
     return out;
   }

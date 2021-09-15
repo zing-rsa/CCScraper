@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent {
   public cnftSub: Subscription = null;
-  
+
   // Form fields
   public searchTerm = "CardanoCity";
   public sort = "date";
@@ -19,19 +19,20 @@ export class AppComponent {
   public nextPage = 1;
 
   public listings = [];
-  public count = null; 
+  public count = null;
   public processedResults = 0;
   public fetchFailed = false;
 
   public itemList;
   public filters = {};
   public filterList = [];
-  public showAll = true;
   public displayedListings = [];
-  
+
   public loading = false;
   public showCheckBox = false;
+  private scrollWindow;
   private container;
+  private currentScroll;
 
   public colorGradient = [
     "#ff9900",
@@ -40,128 +41,141 @@ export class AppComponent {
     "#5e5e5e"
   ];
 
-  constructor (
+  constructor(
     private cnftService: CnftService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.container = document.getElementById('container');
+    this.scrollWindow = document.getElementById('scrollwindow')
+    this.container = document.getElementById('container')
 
     this.filters = this.cnftService.getFilterList();
     this.itemList = Object.keys(this.cnftService.getFilterList());
 
+    this.loadThree();
+
     var self = this;
-    setInterval(function(){
-      if (((self.nextPage-1)*(Math.floor(25/(self.container.offsetWidth/320))*100) - self.container.scrollTop < (document.documentElement.clientHeight) * 0.8 
-        && self.listings.length < self.count ) || self.nextPage == 1 || (!self.showAll && self.processedResults < self.count)) {
-        if (!self.loading){
+    setInterval(function () {
+      console.log(self.sort)
+      if (self.container.scrollHeight - (self.scrollWindow.scrollTop + self.scrollWindow.clientHeight) < 1000) {
+        if (!self.loading) {
           self.loading = true;
           self.getListings()
-          self.nextPage++;
           self.loading = false;
         }
       }
     }, 1000)
   }
 
-  public updateFilterList(item){
+  public async loadThree() {
+    this.loading = true;
+    await this.getListings()
+    await this.getListings()
+    await this.getListings()
+    this.loading = false;
+  }
+
+  public updateFilterList(item) {
     this.filters[item] = !this.filters[item]
-    if (this.filters[item]){
+    if (this.filters[item]) {
       this.filterList.push(item)
     } else {
-      for (let itemName of this.filterList){
-        if (itemName == item){
+      for (let itemName of this.filterList) {
+        if (itemName == item) {
           this.filterList.splice(this.filterList.indexOf(itemName), 1)
           break;
         }
       }
     }
-    this.updateShowAll();
+    console.log(this.filterList)
   }
 
-  public updateShowAll(){
-    var count = 0;
-    for (let name of this.itemList){
-      if (this.filters[name]){
-        count++
-      }
-    }
-
-    if (count == 0) {
-      this.showAll = true;
-    } else {
-      this.showAll = false;
-    }
-  }
-
-  public openLink(id){
+  public openLink(id) {
     window.open("https://cnft.io/token.php?id=" + id, "_blank")
   }
 
   public search() {
     this.clear()
-    this.getListings()
   }
 
-  public clear(){
+  public clear() {
     this.nextPage = 1;
     this.count = null;
     this.listings = [];
     this.processedResults = 0;
   }
 
-  public async getListings(){
-
-    var options = {
-      sort: this.sort, 
-      sortOrder: this.sortOrder, 
-      priceMin: this.priceMin, 
-      priceMax: this.priceMax,
-      page: this.nextPage
-    }
+  public async getListings() {
 
     try {
-      var postResponse = await this.cnftService.getListings(options);
+      var postResponse = await this.cnftService.getListings(this.buildOptions());
       this.count = postResponse.found
       this.listings = this.listings.concat(this.parseListings(postResponse))
       this.fetchFailed = false;
-    } catch (Exception){
+      this.nextPage++;
+    } catch (Exception) {
       this.fetchFailed = true;
     }
   }
 
-  private parseListings(listings){
+  private buildOptions() {
+
+    var options;
+
+    if (this.sort == 'unitNo') {
+      options = {
+        sort: 'date',
+        sortOrder: 'desc',
+        priceMin: this.priceMin,
+        priceMax: this.priceMax,
+        page: this.nextPage
+      }
+    } else {
+      options = {
+        sort: this.sort,
+        sortOrder: this.sortOrder,
+        priceMin: this.priceMin,
+        priceMax: this.priceMax,
+        page: this.nextPage
+      }
+    }
+
+    return options
+  }
+
+  private parseListings(listings) {
     var assets = []
     for (let asset of listings.assets) {
       this.processedResults++;
 
       var newAsset = {
-        id : asset.id,
+        id: asset.id,
         name: asset.metadata.files[0].name,
-        price: asset.price/1000000,
-        numItems:  asset.metadata.tags[5].numberOfItems,
+        price: asset.price / 1000000,
+        numItems: asset.metadata.tags[5].numberOfItems,
         items: []
       }
 
-      if (!newAsset.name.includes("Poster")){
+      if (!newAsset.name.includes("Poster")) {
         for (let item of asset.metadata.tags[3].contents) {
           item['text'] = item.instances + " / " + item.name
           item['color'] = this.getItemColor(item.instances)
           newAsset['items'].push(item)
         }
-  
-        newAsset['items'].sort((a, b) => a.instances - b.instances)  
+
+        newAsset['items'].sort((a, b) => a.instances - b.instances)
+
+        assets.push(newAsset) //move
       }
 
-      assets.push(newAsset)
+      // assets.push(newAsset)
+
     }
-    
+
     return assets
   }
 
-  private getItemColor(itemCount){
-
-    // return this.colorGradient[Math.floor((itemCount/50000)*10)]
+  private getItemColor(itemCount) {
 
     if (itemCount < 5000) {
       return this.colorGradient[0]
@@ -174,13 +188,13 @@ export class AppComponent {
     }
   }
 
-  public toggleCheckboxList(){
+  public toggleCheckboxList() {
     this.showCheckBox = !this.showCheckBox;
   }
 
-  onKeyMin(event) {this.priceMin = event.target.value;}
-  onKeyMax(event) {this.priceMax = event.target.value;}
+  onKeyMin(event) { this.priceMin = event.target.value; }
+  onKeyMax(event) { this.priceMax = event.target.value; }
 
-  selectSortOption(value) {this.sort = value};
-  selectOrderOption(value) {this.sortOrder = value};
+  selectSortOption(value) { this.sort = value };
+  selectOrderOption(value) { this.sortOrder = value };
 }

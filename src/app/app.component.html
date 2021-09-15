@@ -19,6 +19,7 @@
         <select (change)="selectSortOption($event.target.value)">
           <option selected value="date">Date</option>
           <option value="price">Price</option>
+          <option value="unitNo">Unit Number</option>
         </select>
       </div>
       <div class='field-container'>
@@ -50,30 +51,32 @@
   <button (click)="search()">Search</button><br>
 
 </div>
-<div id='container' class="container" >
-    <div *ngFor="let asset of this.listings | cardFilter: this.showAll:this.filterList:this.sort:this.sortOrder" class='listing-card' (click)="openLink(asset.id)">
-        <div class='listing-card-details'>
-          <div>{{asset.name}}</div>
-          <div>{{asset.price}}ADA</div>
-        </div>
-        <div class='listing-card-items'>
-          <div *ngIf="!asset.name.includes('poster')" >
-            <div>{{asset.numItems}} items:</div>
-            <div *ngFor="let i of [0,1,2,3,4]">
-              <span *ngIf="!asset.name.includes('Poster')" style="color:{{asset.items[i].color}}">{{asset.items[i].text}}</span>
-            </div>
+<div id='scrollwindow' class="scroll-window">
+  <div id='container' class="container">
+    <div *ngFor="let asset of this.listings | cardFilter: this.filterList:this.sort:this.sortOrder" class='listing-card' (click)="openLink(asset.id)">
+      <div class='listing-card-details'>
+        <div>{{asset.name}}</div>
+        <div>{{asset.price}}ADA</div>
+      </div>
+      <div class='listing-card-items'>
+        <div *ngIf="!asset.name.includes('poster')" >
+          <div>{{asset.numItems}} items:</div>
+          <div *ngFor="let i of [0,1,2,3,4]">
+            <span *ngIf="!asset.name.includes('Poster')" style="color:{{asset.items[i].color}}">{{asset.items[i].text}}</span>
           </div>
         </div>
-    </div>
-    <div class="loading-dots" *ngIf="(this.processedResults < this.count || this.count == null) && !this.fetchFailed">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-    <div class="fetch-failed" *ngIf="this.fetchFailed">
-      <span>Fetching data failed</span>
-      <span class='warning-icon'>&#9888;</span>
-    </div>
+      </div>
+  </div>
+  <div class="loading-dots" *ngIf="(this.processedResults < this.count || this.count == null) && !this.fetchFailed">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+  <div class="fetch-failed" *ngIf="this.fetchFailed">
+    <span>Fetching data failed</span>
+    <span class='warning-icon'>&#9888;</span>
+  </div>
+  </div>
 </div>
 
 <div class='footer'>
