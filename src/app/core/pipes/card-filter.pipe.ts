@@ -15,15 +15,12 @@ export class CardFilterPipe implements PipeTransform {
     if (filters.length == 0){
       out = assets;
     } else {
-
       var count = 0;
       for (let asset of assets){
         count = 0;
-        for (let item of asset.items){
-          for (let filter of filters){
-            if (filter == item.name){
-              count++
-            }
+        for (let filter of filters){
+          if (asset.itemsMap[filter]){
+            count++
           }
         }
         if (count == filters.length){

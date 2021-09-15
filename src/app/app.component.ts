@@ -16,7 +16,7 @@ export class AppComponent {
   public sortOrder = "desc";
   public priceMin = '';
   public priceMax = '';
-  public nextPage = 1;
+  public nextPage = 0;
 
   public listings = [];
   public count = null;
@@ -56,8 +56,9 @@ export class AppComponent {
 
     var self = this;
     setInterval(function () {
-      console.log(self.sort)
-      if (self.container.scrollHeight - (self.scrollWindow.scrollTop + self.scrollWindow.clientHeight) < 1000) {
+      if ((self.container.scrollHeight - (self.scrollWindow.scrollTop + self.scrollWindow.clientHeight) < 1000
+         || (self.sort == 'unitNo' && self.nextPage < 20))
+         && ((self.count > self.processedResults && this.count != null) || this.count == null)) {
         if (!self.loading) {
           self.loading = true;
           self.getListings()
@@ -99,7 +100,7 @@ export class AppComponent {
   }
 
   public clear() {
-    this.nextPage = 1;
+    this.nextPage = 0;
     this.count = null;
     this.listings = [];
     this.processedResults = 0;
@@ -108,11 +109,11 @@ export class AppComponent {
   public async getListings() {
 
     try {
+      this.nextPage++;
       var postResponse = await this.cnftService.getListings(this.buildOptions());
       this.count = postResponse.found
       this.listings = this.listings.concat(this.parseListings(postResponse))
       this.fetchFailed = false;
-      this.nextPage++;
     } catch (Exception) {
       this.fetchFailed = true;
     }
@@ -153,7 +154,8 @@ export class AppComponent {
         name: asset.metadata.files[0].name,
         price: asset.price / 1000000,
         numItems: asset.metadata.tags[5].numberOfItems,
-        items: []
+        items: [],
+        itemsMap: {}
       }
 
       if (!newAsset.name.includes("Poster")) {
@@ -161,6 +163,7 @@ export class AppComponent {
           item['text'] = item.instances + " / " + item.name
           item['color'] = this.getItemColor(item.instances)
           newAsset['items'].push(item)
+          newAsset.itemsMap[item.name] = true
         }
 
         newAsset['items'].sort((a, b) => a.instances - b.instances)
