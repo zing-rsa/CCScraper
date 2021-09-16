@@ -1,19 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular/common/http';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { of, Subject, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+
+interface IPayload {
+    path: string,
+    body: any,
+    headers: any
+}
+  
 
 @Injectable({
     providedIn: 'root'
 })
 export class CnftService {
 
+    private missionAnnouncedSource = new Subject<IPayload>();
+
     base = "https://api.cnft.io/"
     constructor(
         private http: HttpClient,
     ) { }
 
-    public async getListings(options) {
+    public getListings(options) {
 
         var path = this.base + "market/listings"
         var body = this.buildBody(options)
@@ -23,10 +32,10 @@ export class CnftService {
             responseType: 'json' as const
         }
 
-        return await this.http.post<any>(path, body, headers)
+        return this.http.post<any>(path, body, headers)
         .pipe(
           catchError(this.handleError)
-        ).toPromise()
+        )
         
         //return this.mockData()
     }

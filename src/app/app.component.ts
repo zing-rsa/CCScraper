@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public cnftSub: Subscription = null;
+  public cnftSub: Subscription;
 
   // Form fields
   public searchTerm = "CardanoCity";
@@ -22,17 +22,16 @@ export class AppComponent {
   public count = null;
   public processedResults = 0;
   public fetchFailed = false;
+  public returnedResultsCount = null;
 
   public itemList;
   public filters = {};
   public filterList = [];
-  public displayedListings = [];
 
   public loading = false;
   public showCheckBox = false;
   private scrollWindow;
   private container;
-  private currentScroll;
 
   public colorGradient = [
     "#ff9900",
@@ -52,26 +51,22 @@ export class AppComponent {
     this.filters = this.cnftService.getFilterList();
     this.itemList = Object.keys(this.cnftService.getFilterList());
 
-    this.loadThree();
-
     var self = this;
     setInterval(function () {
       if ((self.container.scrollHeight - (self.scrollWindow.scrollTop + self.scrollWindow.clientHeight) < 1000
          || (self.sort == 'unitNo' && self.nextPage < 20))
-         && ((self.count >= self.processedResults && this.count != null) || this.count == null)) {
+         && !(self.returnedResultsCount == 0)) {
         if (!self.loading) {
-          self.loading = true;
           self.getListings()
-          self.loading = false;
         }
       }
-    }, 1000)
+    }, 500)
   }
 
   public async loadThree() {
     this.loading = true;
     for(var i = 0; i < 3; i ++) {
-      await this.getListings()
+      this.getListings()
     }
     this.loading = false;
   }
@@ -95,6 +90,8 @@ export class AppComponent {
   }
 
   public search() {
+    this.cnftSub.unsubscribe();
+    this.loading = false;
     this.clear()
   }
 
@@ -103,18 +100,31 @@ export class AppComponent {
     this.count = null;
     this.listings = [];
     this.processedResults = 0;
+    this.returnedResultsCount = null;
   }
 
   public async getListings() {
+    this.loading = true;
 
     try {
       this.nextPage++;
-      var postResponse = await this.cnftService.getListings(this.buildOptions());
-      this.count = postResponse.found
-      this.listings = this.listings.concat(this.parseListings(postResponse))
-      this.fetchFailed = false;
-    } catch (Exception) {
-      this.fetchFailed = true;
+
+      this.cnftSub = this.cnftService.getListings(this.buildOptions())
+        .subscribe(
+          data => {
+            this.count = data.found
+            this.listings = this.listings.concat(this.parseListings(data))
+            this.returnedResultsCount = data.assets.length
+            this.fetchFailed = false;
+            this.loading = false;
+          },
+          error => {
+            this.fetchFailed = true;
+            this.loading = false;
+          }
+        )
+    } catch (error) {
+      console.log("Error fetching listings")
     }
   }
 

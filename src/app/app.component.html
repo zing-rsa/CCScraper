@@ -67,7 +67,7 @@
         </div>
       </div>
   </div>
-  <div class="loading-dots" *ngIf="(this.processedResults < this.count || this.count == null) && !this.fetchFailed">
+  <div class="loading-dots" *ngIf="this.loading && !this.fetchFailed">
     <div class="dot"></div>
     <div class="dot"></div>
     <div class="dot"></div>
