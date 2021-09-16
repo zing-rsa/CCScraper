@@ -23,6 +23,7 @@ export class AppComponent {
   public processedResults = 0;
   public fetchFailed = false;
   public returnedResultsCount = null;
+  public newSearch = null;
 
   public itemList;
   public filters = {};
@@ -61,14 +62,6 @@ export class AppComponent {
         }
       }
     }, 500)
-  }
-
-  public async loadThree() {
-    this.loading = true;
-    for(var i = 0; i < 3; i ++) {
-      this.getListings()
-    }
-    this.loading = false;
   }
 
   public updateFilterList(item) {
