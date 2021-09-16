@@ -1,0 +1,80 @@
+<div class="toolbar">
+    <div *ngIf="this.showCheckBox" class="checkbox-list-container">
+      <div class='checkbox-list-topbar'>
+        <span (click)="toggleCheckboxList()" class="close">X</span>
+      </div>
+      <div class="checkbox-list">
+        <div *ngFor="let item of this.itemList" class="checkbox-list-item">
+          <span>{{item}}</span>
+          <input class="checkbox" type="checkbox" [checked]="this.filters[item]" (click)="updateFilterList(item)">
+        </div>
+      </div>
+    </div>
+    <div class="toolbar-fields">
+  
+      <label>Search Criteria:</label>
+      <div class="field-group">
+        <div class='field-container'>
+          <label>Sort By:</label>
+          <select (change)="selectSortOption($event.target.value)">
+            <option selected value="date">Date</option>
+            <option value="price">Price</option>
+            <option value="unitNo">Unit Number</option>
+          </select>
+        </div>
+        <div class='field-container'>
+          <label>Order:</label>
+          <select (change)="selectOrderOption($event.target.value)">
+            <option value="asc" >Asc</option>
+            <option selected value='desc'>Desc</option>
+          </select>
+        </div>
+        <div class='field-container'>
+          <label>Price Min:</label>
+          <input (keyup)="onKeyMin($event)"> <br>
+        </div>
+        <div class='field-container'>
+          <label>Price Max:</label>
+          <input (keyup)="onKeyMax($event)"> <br>
+        </div>
+      </div>
+  
+      <label>Filter Results:</label>
+      <div class="field-group">
+        <div class='field-container'>
+          <label>Must include:</label>
+          <button (click)="toggleCheckboxList()">...</button><br>
+        </div>
+      </div>
+    </div>
+  
+    <button (click)="search()">Search</button><br>
+  
+  </div>
+  <div id='scrollwindow' class="scroll-window">
+    <div id='container' class="container">
+      <div *ngFor="let asset of this.listings | cardFilter: this.filterList:this.sort:this.sortOrder" class='listing-card' (click)="openLink(asset.id)">
+        <div class='listing-card-details'>
+          <div>{{asset.name}}</div>
+          <div>{{asset.price}}ADA</div>
+        </div>
+        <div class='listing-card-items'>
+          <div *ngIf="!asset.name.includes('poster')" >
+            <div>{{asset.numItems}} items:</div>
+            <div *ngFor="let i of [0,1,2,3,4]">
+              <span *ngIf="!asset.name.includes('Poster')" style="color:{{asset.items[i].color}}">{{asset.items[i].text}}</span>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="loading-dots" *ngIf="(this.processedResults < this.count || this.count == null) && !this.fetchFailed">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="fetch-failed" *ngIf="this.fetchFailed">
+      <span>Fetching data failed</span>
+      <span class='warning-icon'>&#9888;</span>
+    </div>
+    </div>
+  </div>

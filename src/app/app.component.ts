@@ -9,30 +9,29 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent {
   public cnftSub: Subscription = null;
-
+  
   // Form fields
   public searchTerm = "CardanoCity";
   public sort = "date";
   public sortOrder = "desc";
   public priceMin = '';
   public priceMax = '';
-  public nextPage = 0;
+  public nextPage = 1;
 
   public listings = [];
-  public count = null;
+  public count = null; 
   public processedResults = 0;
   public fetchFailed = false;
 
   public itemList;
   public filters = {};
   public filterList = [];
+  public showAll = true;
   public displayedListings = [];
-
+  
   public loading = false;
   public showCheckBox = false;
-  private scrollWindow;
   private container;
-  private currentScroll;
 
   public colorGradient = [
     "#ff9900",
@@ -41,144 +40,128 @@ export class AppComponent {
     "#5e5e5e"
   ];
 
-  constructor(
+  constructor (
     private cnftService: CnftService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.scrollWindow = document.getElementById('scrollwindow')
-    this.container = document.getElementById('container')
+    this.container = document.getElementById('container');
 
     this.filters = this.cnftService.getFilterList();
     this.itemList = Object.keys(this.cnftService.getFilterList());
 
-    this.loadThree();
-
     var self = this;
-    setInterval(function () {
-      if ((self.container.scrollHeight - (self.scrollWindow.scrollTop + self.scrollWindow.clientHeight) < 1000
-         || (self.sort == 'unitNo' && self.nextPage < 20))
-         && ((self.count > self.processedResults && this.count != null) || this.count == null)) {
-        if (!self.loading) {
+    setInterval(function(){
+      if (((self.nextPage-1)*(Math.floor(25/(self.container.offsetWidth/320))*100) - self.container.scrollTop < (document.documentElement.clientHeight) * 0.8 
+        && self.listings.length < self.count ) || self.nextPage == 1 || (!self.showAll && self.processedResults < self.count)) {
+        if (!self.loading){
           self.loading = true;
           self.getListings()
+          self.nextPage++;
           self.loading = false;
         }
       }
     }, 1000)
   }
 
-  public async loadThree() {
-    this.loading = true;
-    await this.getListings()
-    await this.getListings()
-    await this.getListings()
-    this.loading = false;
-  }
-
-  public updateFilterList(item) {
+  public updateFilterList(item){
     this.filters[item] = !this.filters[item]
-    if (this.filters[item]) {
+    if (this.filters[item]){
       this.filterList.push(item)
     } else {
-      for (let itemName of this.filterList) {
-        if (itemName == item) {
+      for (let itemName of this.filterList){
+        if (itemName == item){
           this.filterList.splice(this.filterList.indexOf(itemName), 1)
           break;
         }
       }
     }
-    console.log(this.filterList)
+    this.updateShowAll();
   }
 
-  public openLink(id) {
+  public updateShowAll(){
+    var count = 0;
+    for (let name of this.itemList){
+      if (this.filters[name]){
+        count++
+      }
+    }
+
+    if (count == 0) {
+      this.showAll = true;
+    } else {
+      this.showAll = false;
+    }
+  }
+
+  public openLink(id){
     window.open("https://cnft.io/token.php?id=" + id, "_blank")
   }
 
   public search() {
     this.clear()
+    this.getListings()
   }
 
-  public clear() {
-    this.nextPage = 0;
+  public clear(){
+    this.nextPage = 1;
     this.count = null;
     this.listings = [];
     this.processedResults = 0;
   }
 
-  public async getListings() {
+  public async getListings(){
+
+    var options = {
+      sort: this.sort, 
+      sortOrder: this.sortOrder, 
+      priceMin: this.priceMin, 
+      priceMax: this.priceMax,
+      page: this.nextPage
+    }
 
     try {
-      this.nextPage++;
-      var postResponse = await this.cnftService.getListings(this.buildOptions());
+      var postResponse = await this.cnftService.getListings(options);
       this.count = postResponse.found
       this.listings = this.listings.concat(this.parseListings(postResponse))
       this.fetchFailed = false;
-    } catch (Exception) {
+    } catch (Exception){
       this.fetchFailed = true;
     }
   }
 
-  private buildOptions() {
-
-    var options;
-
-    if (this.sort == 'unitNo') {
-      options = {
-        sort: 'date',
-        sortOrder: 'desc',
-        priceMin: this.priceMin,
-        priceMax: this.priceMax,
-        page: this.nextPage
-      }
-    } else {
-      options = {
-        sort: this.sort,
-        sortOrder: this.sortOrder,
-        priceMin: this.priceMin,
-        priceMax: this.priceMax,
-        page: this.nextPage
-      }
-    }
-
-    return options
-  }
-
-  private parseListings(listings) {
+  private parseListings(listings){
     var assets = []
     for (let asset of listings.assets) {
       this.processedResults++;
 
       var newAsset = {
-        id: asset.id,
+        id : asset.id,
         name: asset.metadata.files[0].name,
-        price: asset.price / 1000000,
-        numItems: asset.metadata.tags[5].numberOfItems,
-        items: [],
-        itemsMap: {}
+        price: asset.price/1000000,
+        numItems:  asset.metadata.tags[5].numberOfItems,
+        items: []
       }
 
-      if (!newAsset.name.includes("Poster")) {
+      if (!newAsset.name.includes("Poster")){
         for (let item of asset.metadata.tags[3].contents) {
           item['text'] = item.instances + " / " + item.name
           item['color'] = this.getItemColor(item.instances)
           newAsset['items'].push(item)
-          newAsset.itemsMap[item.name] = true
         }
-
-        newAsset['items'].sort((a, b) => a.instances - b.instances)
-
-        assets.push(newAsset) //move
+  
+        newAsset['items'].sort((a, b) => a.instances - b.instances)  
       }
 
-      // assets.push(newAsset)
-
+      assets.push(newAsset)
     }
-
+    
     return assets
   }
 
-  private getItemColor(itemCount) {
+  private getItemColor(itemCount){
+
+    // return this.colorGradient[Math.floor((itemCount/50000)*10)]
 
     if (itemCount < 5000) {
       return this.colorGradient[0]
@@ -191,13 +174,13 @@ export class AppComponent {
     }
   }
 
-  public toggleCheckboxList() {
+  public toggleCheckboxList(){
     this.showCheckBox = !this.showCheckBox;
   }
 
-  onKeyMin(event) { this.priceMin = event.target.value; }
-  onKeyMax(event) { this.priceMax = event.target.value; }
+  onKeyMin(event) {this.priceMin = event.target.value;}
+  onKeyMax(event) {this.priceMax = event.target.value;}
 
-  selectSortOption(value) { this.sort = value };
-  selectOrderOption(value) { this.sortOrder = value };
+  selectSortOption(value) {this.sort = value};
+  selectOrderOption(value) {this.sortOrder = value};
 }

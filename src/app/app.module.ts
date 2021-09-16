@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CardFilterPipe } from './core/pipes/card-filter.pipe';
+import { ComponentComponent } from './modules/alers/component/component.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    CardFilterPipe
+    CardFilterPipe,
+    ComponentComponent
   ],
   imports: [
     BrowserModule,
