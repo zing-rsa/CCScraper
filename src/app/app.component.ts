@@ -58,7 +58,7 @@ export class AppComponent {
     setInterval(function () {
       if ((self.container.scrollHeight - (self.scrollWindow.scrollTop + self.scrollWindow.clientHeight) < 1000
          || (self.sort == 'unitNo' && self.nextPage < 20))
-         && ((self.count > self.processedResults && this.count != null) || this.count == null)) {
+         && ((self.count >= self.processedResults && this.count != null) || this.count == null)) {
         if (!self.loading) {
           self.loading = true;
           self.getListings()
@@ -70,9 +70,9 @@ export class AppComponent {
 
   public async loadThree() {
     this.loading = true;
-    await this.getListings()
-    await this.getListings()
-    await this.getListings()
+    for(var i = 0; i < 3; i ++) {
+      await this.getListings()
+    }
     this.loading = false;
   }
 
@@ -88,7 +88,6 @@ export class AppComponent {
         }
       }
     }
-    console.log(this.filterList)
   }
 
   public openLink(id) {
@@ -158,6 +157,7 @@ export class AppComponent {
         itemsMap: {}
       }
 
+      //if (!newAsset.name.includes("Poster") && !assets.find(el => el.name == newAsset.name)) {
       if (!newAsset.name.includes("Poster")) {
         for (let item of asset.metadata.tags[3].contents) {
           item['text'] = item.instances + " / " + item.name

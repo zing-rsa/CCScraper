@@ -22,11 +22,12 @@ export class CnftService {
             headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
             responseType: 'json' as const
         }
-        return await this.http.post<any>(path, body, headers)
-          .pipe(
-            catchError(this.handleError)
-          ).toPromise();
 
+        return await this.http.post<any>(path, body, headers)
+        .pipe(
+          catchError(this.handleError)
+        ).toPromise()
+        
         //return this.mockData()
     }
 
@@ -3653,3 +3654,4 @@ export class CnftService {
         return throwError(error);
     }
 }
+
