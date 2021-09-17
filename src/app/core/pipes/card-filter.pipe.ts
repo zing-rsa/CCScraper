@@ -1,6 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
-import { filter } from 'rxjs/operators';
 
 @Pipe({
   name: 'cardFilter',

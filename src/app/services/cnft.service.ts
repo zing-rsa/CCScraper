@@ -1,21 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular/common/http';
-import { of, Subject, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-
-interface IPayload {
-    path: string,
-    body: any,
-    headers: any
-}
-  
+import { HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CnftService {
-
-    private missionAnnouncedSource = new Subject<IPayload>();
 
     base = "https://api.cnft.io/"
     constructor(
