@@ -67,11 +67,14 @@
         </div>
       </div>
   </div>
-  <div class="loading-dots" *ngIf="this.loading && !this.fetchFailed">
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
+  <div class="loading-dots-container">
+    <div class="loading-dots" *ngIf="this.loading && !this.fetchFailed">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
   </div>
+ 
   <div class="fetch-failed" *ngIf="this.fetchFailed">
     <span>Fetching data failed</span>
     <span class='warning-icon'>&#9888;</span>
