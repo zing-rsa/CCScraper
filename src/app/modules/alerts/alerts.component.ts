@@ -64,7 +64,7 @@ export class AlertsComponent implements OnInit {
     }
 
     Notification.requestPermission(function (permission) {
-      var notification = new Notification("Notification service started", { body: "New listings appear here", icon: '../../../assets/CC_logo.png', dir: 'auto' });
+      var notification = new Notification("Notification service started", { body: "New listings appear here", icon: './assets/CC_logo.png', dir: 'auto' });
       setTimeout(function () {
         notification.close();
       }, 3000);
@@ -169,7 +169,7 @@ export class AlertsComponent implements OnInit {
   }
 
   public notify(listing){
-    var notification = new Notification("New Listing:", { body: listing.name + ": " + listing.price + "ADA", icon: '../../../assets/CC_logo.png', dir: 'auto' });
+    var notification = new Notification("New Listing:", { body: listing.name + ": " + listing.price + "ADA", icon: './assets/CC_logo.png', dir: 'auto' });
     setTimeout(function () {
       notification.close();
     }, 4000);
