@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CnftService } from "../../services/cnft.service";
-import { Subscription } from 'rxjs';
+import { Router,NavigationStart} from '@angular/router';
 import { HomeModule } from './home.module';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-home',
@@ -43,7 +45,8 @@ export class HomeComponent implements OnInit {
   ];
 
   constructor(
-    private cnftService: CnftService
+    private cnftService: CnftService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -52,6 +55,12 @@ export class HomeComponent implements OnInit {
 
     this.filters = this.cnftService.getFilterList();
     this.itemList = Object.keys(this.cnftService.getFilterList());
+
+    this.router.events.subscribe(event =>{
+      if ((event instanceof NavigationStart) && this.cnftSub){
+        this.cnftSub.unsubscribe()
+      }
+   })
 
     var self = this;
     setInterval(function () {

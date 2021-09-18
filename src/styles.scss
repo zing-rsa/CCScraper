@@ -1,12 +1,15 @@
+html {
+  padding:0px;
+}
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color:#181818;
+    margin:0px;
 }
 
 button:hover {
     cursor:pointer;
 }
-
 
 /* width */
 ::-webkit-scrollbar {

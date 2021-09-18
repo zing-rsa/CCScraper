@@ -1,1 +1,100 @@
-<p>alerts works!</p>
+<div class="toolbar">
+
+    <div *ngIf="this.showStrictCheckBox" class="checkbox-list-container">
+        <div class='checkbox-list-topbar'>
+            <span>Must include:</span>
+            <span (click)="toggleCheckboxList('strict')" class="close">X</span>
+        </div>
+        <div class="checkbox-list">
+            <div *ngFor="let item of this.itemList" class="checkbox-list-item">
+                <span>{{item}}</span>
+                <input class="checkbox" type="checkbox" [checked]="this.strictFilters[item]"
+                    (click)="updateFilterList(item, 'strict')">
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="this.showLooseCheckBox" class="checkbox-list-container">
+        <div class='checkbox-list-topbar'>
+            <span>Includes either:</span>
+            <span (click)="toggleCheckboxList('loose')" class="close">X</span>
+        </div>
+        <div class="checkbox-list">
+            <div *ngFor="let item of this.itemList" class="checkbox-list-item">
+                <span>{{item}}</span>
+                <input class="checkbox" type="checkbox" [checked]="this.looseFilters[item]"
+                    (click)="updateFilterList(item, 'loose')">
+            </div>
+        </div>
+    </div>
+
+    <div class="description">This tool constantly syncs a group of the latest CNFT listings. You will be notified of listings that match your criteria bellow. (leave blank for everything)</div>
+
+    <div class="toolbar-fields">
+        <div class="field-group">
+            <div class='field-container'>
+                <label>Price Min:</label>
+                <input (keyup)="onKeyMin($event)"> <br>
+            </div>
+            <div class='field-container'>
+                <label>Price Max:</label>
+                <input (keyup)="onKeyMax($event)"> <br>
+            </div>
+            <div class='field-container'>
+                <label>Min Unit Number:</label>
+                <input (keyup)="onKeyMinUnit($event)"> <br>
+            </div>
+            <div class='field-container'>
+                <label>Max Unit Number:</label>
+                <input (keyup)="onKeyMaxUnit($event)"> <br>
+            </div>
+
+            <div class='field-container'>
+                <label>Must include:</label>
+                <button (click)="toggleCheckboxList('strict')" [disabled]='this.showLooseCheckBox'>...</button><br>
+            </div>
+
+            <div class='field-container'>
+                <label>Includes either:</label>
+                <button (click)="toggleCheckboxList('loose')" [disabled]='this.showStrictCheckBox'>...</button><br>
+            </div>
+
+        </div>
+    </div>
+    <button (click)='startNoti()'>Start</button>
+    <button (click)='stopNoti()'>Stop</button><br>
+</div>
+
+<div id='scrollwindow' class="scroll-window">
+
+    <div class="loading-dots-container">
+        <div class="loading-dots" *ngIf="this.notifying && !this.fetchFailed">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <div *ngFor="let asset of this.listings" class='listing-card' (click)="openLink(asset.id)">
+
+        <div class='listing-card-details'>
+            <div>{{asset.name}}</div>
+            <div>{{asset.price}}ADA</div>
+        </div>
+
+        <div class='listing-card-items'>
+            <div *ngIf="!asset.name.includes('poster')">
+                <div>{{asset.numItems}} items:</div>
+                <div *ngFor="let i of [0,1,2,3,4]">
+                    <span *ngIf="!asset.name.includes('Poster')"
+                        style="color:{{asset.items[i].color}}">{{asset.items[i].text}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fetch-failed" *ngIf="this.fetchFailed">
+        <span>Fetching data failed</span>
+        <span class='warning-icon'>&#9888;</span>
+    </div>
+</div>

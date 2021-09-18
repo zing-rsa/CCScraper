@@ -12,9 +12,6 @@ import { CardFilterPipe } from 'src/app/core/pipes/card-filter.pipe';
   imports: [
     CommonModule,
     BrowserModule
-  ],
-  exports: [
-    BrowserModule
   ]
 })
 export class HomeModule { }
