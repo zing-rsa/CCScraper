@@ -193,7 +193,6 @@ export class AlertsComponent implements OnInit {
     }
   }
 
-
   private getNewListings(){
     if(this.listings == null){
       return []

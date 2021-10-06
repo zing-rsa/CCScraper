@@ -1,13 +1,13 @@
-<nav class="header">
-  <ul class="header-list">
-    <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
-    |
-    <li><a routerLink="/alerts" routerLinkActive="active">Alerts</a></li>
-  </ul>
-</nav>
+<app-toolbar></app-toolbar>
 <router-outlet></router-outlet>
 <div class='footer'>
-    <span>If you found any good deals, support is greatly appreciated!</span><br>
-    <span>addr1q9mek78dslzjmy4dgfyh9u4htvk06rhh7lzxxz6aspfcecl50k8cjs683mfjajv70c7y77npdnyl7lskqj78ku56432s6ju7jk</span><br>
-    <span>Dm for features/bugs. Discord: zing#0908. Twitter: <a href="https://twitter.com/zing_________">@zing_________</a></span><br>
-  </div>
+  <span>If you found this useful, support is greatly appreciated!</span><br>
+  <span>addr1q9mek78dslzjmy4dgfyh9u4htvk06rhh7lzxxz6aspfcecl50k8cjs683mfjajv70c7y77npdnyl7lskqj78ku56432s6ju7jk</span><br>
+  <span>Dm for features/bugs. Discord: zing#0908. Twitter: <a
+      href="https://twitter.com/zing_________">@zing_________</a></span><br>
+</div>
+
+<div class="disclaimer" >
+  <span>This tool has been made by contributions from community members acting independently of the CardanoCity team. It is not endorsed or controlled by CardanoCity.</span>
+  <button (click)="hide()">I understand</button>
+</div>

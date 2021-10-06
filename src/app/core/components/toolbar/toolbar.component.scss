@@ -1,0 +1,47 @@
+.toolbar {
+    height:50px;
+    width:100vw;
+    display:flex;
+    flex-direction:row;
+    list-style: none;
+    top:0px;
+    left:0px;
+}
+
+.toolbar li {
+    height:50px;
+    margin:0px;
+    margin-left:5%;
+    padding:0px;
+}
+
+.hamburger {
+    width:50px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+
+i {
+    height:32px;
+    width:32px;
+    font-size:32px;
+    margin:9px;
+    color:white;
+}
+
+i:hover{
+    color:rgb(184, 184, 184);
+}
+
+.darken {
+    background-color: #292929;
+}
+
+@media only screen and (max-width: 950px) {
+    .hamburger {
+
+    }
+  }

@@ -1,0 +1,7 @@
+<div class="toolbar">
+    <li class="hamburger" [ngClass]="{'darken': menuExpanded}">
+        <i class="fas fa-bars" (click)="toggleMenu()"></i>
+    </li>
+</div>
+
+<app-menu *ngIf="this.menuExpanded"></app-menu>

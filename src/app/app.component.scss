@@ -45,3 +45,24 @@
 .footer a, .footer a:visited {
   color:white;
 }
+
+.disclaimer {
+  position:absolute;
+  height:200px;
+  width:300px;
+  top:50px;
+  left:50px;
+  background-color:red;
+  text-align: center;
+}
+
+button {
+  background-color: #424242;
+  width: 150px;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  color: white;
+  font-size: 15px;
+}
