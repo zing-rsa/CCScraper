@@ -6,8 +6,9 @@
   <span>Dm for features/bugs. Discord: zing#0908. Twitter: <a
       href="https://twitter.com/zing_________">@zing_________</a></span><br>
 </div>
-
-<div class="disclaimer" >
-  <span>This tool has been made by contributions from community members acting independently of the CardanoCity team. It is not endorsed or controlled by CardanoCity.</span>
-  <button (click)="hide()">I understand</button>
+<div class="blocker" *ngIf="this.showDisclaimer">
+  <div class="disclaimer" >
+    <span>This tool has been made by contributions from community members acting independently of the CardanoCity team. It is not endorsed or maintained by CardanoCity or any of it's team members.</span>
+    <button (click)="hide()">I understand</button>
+  </div>
 </div>

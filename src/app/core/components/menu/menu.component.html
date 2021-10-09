@@ -2,16 +2,16 @@
     <div class="menu-list">
         
         <li>
-            <a routerLink="/home">Home (CNFT.io viewer)</a>
+            <a [ngClass]="{'underline': this.router.url == '/home'}" routerLink="/home">Home (CNFT.io viewer)</a>
         </li>
         <li>
-            <a routerLink="/explorer">Explorer</a>
+            <a [ngClass]="{'underline': this.router.url == '/explorer'}" routerLink="/explorer">Explorer</a>
         </li>
         <li>
-            <a routerLink="/alerts">Alerts</a>
+            <a [ngClass]="{'underline': this.router.url == '/alerts'}" routerLink="/alerts">Alerts</a>
         </li>
         <li>
-            <a routerLink="/rarities">Rarities</a>
+            <a [ngClass]="{'underline': this.router.url == '/rarities'}" routerLink="/rarities">Rarities</a>
         </li>
     </div>
 </div>

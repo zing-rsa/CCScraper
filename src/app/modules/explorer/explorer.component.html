@@ -79,16 +79,14 @@
 
             <div class="table-header-items">
                 <div class='table-header-item'>
-                    Unit #: <i class="fas fa-sort sort" (click)="setSort('number')"></i>
+                    Unit #: <i [ngClass]="{'dark': this.sortBy == 'number'}" class="fas fa-sort sort" (click)="setSort('number')"></i>
                 </div>
-                <div class='table-header-item'>Price: <i class="fas fa-sort sort" (click)="setSort('price')"></i></div>
-                <div class='table-header-item'>Value: <i class="fas fa-sort sort" (click)="setSort('value')"></i></div>
-                <div class='table-header-item hide'>Items: <i class="fas fa-sort sort" (click)="setSort('items')"></i></div>
-                <div class='table-header-item hide'>Base: <i class="fas fa-sort sort" (click)="setSort('base')"></i></div>
-                <div class='table-header-item hide'>Poster: <i class="fas fa-sort sort" (click)="setSort('poster')"></i>
-                </div>
-                <div class='table-header-item hide'>Glitch: <i class="fas fa-sort sort" (click)="setSort('glitched')"></i>
-                </div>
+                <div class='table-header-item'      >Price: <i  [ngClass]="{'dark': this.sortBy == 'price'}"    class="fas fa-sort sort" (click)="setSort('price')"></i></div>
+                <div class='table-header-item'      >Value: <i  [ngClass]="{'dark': this.sortBy == 'value'}"    class="fas fa-sort sort" (click)="setSort('value')"></i></div>
+                <div class='table-header-item hide' >Items: <i  [ngClass]="{'dark': this.sortBy == 'items'}"    class="fas fa-sort sort" (click)="setSort('items')"></i></div>
+                <div class='table-header-item hide' >Base: <i   [ngClass]="{'dark': this.sortBy == 'base'}"     class="fas fa-sort sort" (click)="setSort('base')"></i></div>
+                <div class='table-header-item hide' >Poster: <i [ngClass]="{'dark': this.sortBy == 'poster'}"   class="fas fa-sort sort" (click)="setSort('poster')"></i></div>
+                <div class='table-header-item hide' >Glitch: <i [ngClass]="{'dark': this.sortBy == 'glitched'}" class="fas fa-sort sort" (click)="setSort('glitched')"></i></div>
                 <div class='header-spacer'></div>
             </div>
 

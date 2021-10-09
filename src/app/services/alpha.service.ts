@@ -1,19 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import items from './items.json'
 
 @Injectable({
     providedIn: 'root'
 })
 export class AlphaService {
 
-    //private base = 'https://alphastaking.com/ccassets'
-    private base = 'http://localhost:4200/api'
+    private base = 'https://alphastaking.com/ccassets'
+
+    private items = items;
 
     constructor(
         private http: HttpClient
     ) {
+        if (!environment.production) {
+            this.base = 'http://localhost:4200/api'
+        }
     }
 
     public getUnits() {
@@ -24,6 +30,20 @@ export class AlphaService {
             .pipe(
                 catchError(this.handleError)
             )
+    }
+
+    public getFLoors() {
+
+        var path = this.base + "/floor"
+
+        return this.http.get<any>(path)
+            .pipe(
+                catchError(this.handleError)
+            )
+    }
+
+    public getItems() {
+        return this.items
     }
 
     public getItemsMap() {

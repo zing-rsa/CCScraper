@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AlphaService } from 'src/app/services/alpha.service';
 import { ExplorerModule } from './explorer.module';
 import { CnftService } from 'src/app/services/cnft.service';
-import unitsJson from '../../services/data_small.json';
 import { Subscription } from 'rxjs';
+import { ThrowStmt } from '@angular/compiler';
+//import unitsJson from '../../services/data_small.json';
 
 
 @Component({
@@ -63,17 +64,17 @@ export class ExplorerComponent implements OnInit {
     this.itemList = Object.keys(this.cnftService.getFilterList());
     this.itemsMap = this.alphaService.getItemsMap()
 
-    //this.populate()
-    this.devPopulate()
+    this.populate()
+    //this.devPopulate()
   }
 
-  private devPopulate(){
-    this.data = unitsJson['units']
-    this.parseListings()
-    this.displayedUnits = this.units;
-    this.fetchFailed = false;
-    this.loading = false;
-  }
+  //private devPopulate(){
+  //  this.data = unitsJson['units']
+  //  this.parseListings()
+  //  this.displayedUnits = this.units;
+  //  this.fetchFailed = false;
+  //  this.loading = false;
+  //}
 
   private async populate(){
     await this.fetchUnits()
@@ -129,6 +130,7 @@ export class ExplorerComponent implements OnInit {
 
   public applyFilters(){
     this.displayedUnits = this.displayedUnits.filter((unit) => this.listingPassed(unit))
+    this.applySort()
   }
 
   private compare(a: number | string, b: number | string, isAsc: boolean) {
@@ -150,13 +152,13 @@ export class ExplorerComponent implements OnInit {
     }
 
     if (this.unitMin != '') {
-      if (!(listing.name > this.unitMin)){
+      if (!(listing.name >= this.unitMin)){
         return false
       }
     }
 
     if (this.unitMax != '') {
-      if (!(listing.name < this.unitMax)){
+      if (!(listing.name <= this.unitMax)){
         return false
       }
     }

@@ -1,0 +1,20 @@
+<div class='container'>
+    <div class="table-header">
+        <div class="header-item-detail">Item:</div>
+        <div class="header-item-detail small">Rarity:</div>
+        <div class="header-item-detail hide">Instances:</div>
+        <div class="header-item-detail hide">Minted:</div>
+        <div class="header-item-detail small">Floor:</div>
+        <div class="spacer"></div>
+
+    </div>
+    <div class="table-body">
+        <div class='list-item' *ngFor="let item of this.items">
+            <div class="list-item-detail" style="color:{{this.getItemColor(item.instances)}}">{{item.name}}</div>
+            <div class="list-item-detail small">{{((item.instances/50000) * 100).toFixed(2)}}%</div>
+            <div class="list-item-detail hide">{{item.instances}}</div>
+            <div class="list-item-detail hide">{{item.mintCount ? item.mintCount : "- - -"}}</div>
+            <div class="list-item-detail small">{{item.price ? item.price  + " ADA" : "- - -"}}</div>
+        </div>
+    </div>
+</div>
