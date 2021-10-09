@@ -3,8 +3,8 @@ import { AlphaService } from 'src/app/services/alpha.service';
 import { ExplorerModule } from './explorer.module';
 import { CnftService } from 'src/app/services/cnft.service';
 import { Subscription } from 'rxjs';
-import { ThrowStmt } from '@angular/compiler';
-//import unitsJson from '../../services/data_small.json';
+import instanceMap from '../../services/instanceMap.json';
+import { ElementSchemaRegistry } from '@angular/compiler';
 
 
 @Component({
@@ -22,6 +22,9 @@ export class ExplorerComponent implements OnInit {
   public units = [];
   public displayedUnits = [];
   public itemsMap = {};
+  public itemList = []
+
+  public expanded = {};
 
   public priceMin: any = '';
   public priceMax: any = '';
@@ -42,7 +45,6 @@ export class ExplorerComponent implements OnInit {
   public looseFilterList = []
   public strictFilters = {}
   public looseFilters = {}
-  public itemList = []
 
   public colorGradient = [
     "#ff9900",
@@ -54,7 +56,6 @@ export class ExplorerComponent implements OnInit {
   constructor(
     private alphaService: AlphaService,
     private cnftService: CnftService
-  
   ) { }
 
   ngOnInit(): void {
@@ -116,12 +117,19 @@ export class ExplorerComponent implements OnInit {
         itemCount: this.data[listing].unit.contents.length,
         glitched: this.data[listing].unit.glitch != null ? "yes" : "no",
         listingId: this.data[listing].listing ? this.data[listing].listing.id : null,
-        itemsMap: {}
+        itemsMap: {},
+        itemsList: []
       }
       
       for (let item of this.data[listing].unit.contents){
         unit['itemsMap'][item] = true
+        unit['itemsList'].push({
+          "name": this.itemsMap[item],
+          "instances": parseInt(instanceMap[this.itemsMap[item]])
+        })
       }
+
+      unit['itemsList'].sort((a,b) => a.instances - b.instances)
 
       this.units.push(unit)
 
@@ -189,8 +197,6 @@ export class ExplorerComponent implements OnInit {
 
     return true;
   }
-
-  
 
   public applySort(){
     var self = this;
@@ -266,7 +272,7 @@ export class ExplorerComponent implements OnInit {
     }
   }
 
-  private getItemColor(itemCount) {
+  public getItemColor(itemCount) {
 
     if (itemCount < 5000) {
       return this.colorGradient[0]
@@ -302,14 +308,22 @@ export class ExplorerComponent implements OnInit {
     window.open("https://pool.pm/a5425bd7bc4182325188af2340415827a73f845846c165d9e14c5aed.Unit" + "0".repeat(5-id.toString().length) + id, "_blank")
   }
 
+  toggleExpand(id){
+    if (this.expanded[id]){
+      this.expanded[id] = !this.expanded[id]
+    } else {
+      this.expanded[id] = true
+    }
+  }
+
   onKeyMin(event) { this.priceMin = event.target.value; }
   onKeyMax(event) { this.priceMax = event.target.value; }
   onKeyMinUnit(event) { this.unitMin = event.target.value; }
   onKeyMaxUnit(event) { this.unitMax = event.target.value; }
-  decrement(){ if (this.page != 1) this.page--; }
-  increment(){ if (!(this.page*this.pageSize > this.displayedUnits.length)) this.page++; }
-  start(){ this.page = 1}
-  end() { this.page = Math.ceil(this.displayedUnits.length / this.pageSize)}
+  decrement(){ this.expanded = {}; if (this.page != 1) this.page--; }
+  increment(){ this.expanded = {}; if (!(this.page*this.pageSize > this.displayedUnits.length)) this.page++; }
+  start(){ this.expanded = {}; this.page = 1}
+  end() {this.expanded = {};  this.page = Math.ceil(this.displayedUnits.length / this.pageSize)}
 }
   
 

@@ -94,20 +94,29 @@
         <div class="table-body">
             
             <div id="table-content" class="table-content" *ngIf="!this.loading">
-                <div class="table-item" *ngFor="let unit of this.displayedUnits | paginator: this.page:this.pageSize">
-                    <div class='table-item-detail'>
-                        <i class="far fa-eye pointer" (click)="openAsset(unit.name)"></i> {{unit.name}}
+                <div class="table-item" *ngFor="let unit of this.displayedUnits | paginator: this.page:this.pageSize" (click)="toggleExpand(unit.name)" [ngClass]="{'expanded': this.expanded[unit.name]}">
+                    
+                    <div class="table-item-detail-top">
+                        <div class='table-item-detail'>
+                            <i class="far fa-eye pointer" (click)="openAsset(unit.name)"></i> {{unit.name}}
+                        </div>
+                        <div class='table-item-detail'>
+                            <i class="fas fa-shopping-cart pointer" *ngIf="unit.price != ''"
+                                (click)="openListing(unit.listingId)"></i>
+                            {{unit.price}}
+                        </div>
+                        <div class='table-item-detail'>{{unit.value}}</div>
+                        <div class='table-item-detail hide'>{{unit.itemCount}}</div>
+                        <div class='table-item-detail hide'>{{unit.base}}</div>
+                        <div class='table-item-detail hide'>{{unit.poster}}</div>
+                        <div class='table-item-detail hide'>{{unit.glitched}}</div>
                     </div>
-                    <div class='table-item-detail'>
-                        <i class="fas fa-shopping-cart pointer" *ngIf="unit.price != ''"
-                            (click)="openListing(unit.listingId)"></i>
-                        {{unit.price}}
+
+                    <div class="table-item-detail-bottom" *ngIf="this.expanded[unit.name]">
+
+                        <div class="table-item-detail-bottom-detail" *ngFor="let item of unit.itemsList.slice(0,5)" style="color: {{this.getItemColor(item.instances)}}">{{item.name}}</div>
+
                     </div>
-                    <div class='table-item-detail'>{{unit.value}}</div>
-                    <div class='table-item-detail hide'>{{unit.itemCount}}</div>
-                    <div class='table-item-detail hide'>{{unit.base}}</div>
-                    <div class='table-item-detail hide'>{{unit.poster}}</div>
-                    <div class='table-item-detail hide'>{{unit.glitched}}</div>
                 </div>
             </div>
 
