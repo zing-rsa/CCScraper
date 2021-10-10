@@ -14,7 +14,6 @@ export class HomeComponent implements OnInit {
   public cnftSub: Subscription;
 
   // Form fields
-  public searchTerm = "CardanoCity";
   public sort = "date";
   public sortOrder = "desc";
   public priceMin = '';
@@ -37,6 +36,8 @@ export class HomeComponent implements OnInit {
   private scrollWindow;
   private container;
 
+  private poller;
+
   public colorGradient = [
     "#ff9900",
     "#cc00ff",
@@ -58,12 +59,13 @@ export class HomeComponent implements OnInit {
 
     this.router.events.subscribe(event =>{
       if ((event instanceof NavigationStart) && this.cnftSub){
+        clearInterval(this.poller)
         this.cnftSub.unsubscribe()
       }
    })
 
     var self = this;
-    setInterval(function () {
+    this.poller = setInterval(function () {
       if ((self.container.scrollHeight - (self.scrollWindow.scrollTop + self.scrollWindow.clientHeight) < 1000
          || (self.sort == 'unitNo' && self.nextPage < 20))
          && !(self.returnedResultsCount == 0)) {

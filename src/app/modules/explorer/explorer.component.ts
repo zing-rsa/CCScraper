@@ -5,6 +5,7 @@ import { CnftService } from 'src/app/services/cnft.service';
 import { Subscription } from 'rxjs';
 import instanceMap from '../../services/instanceMap.json';
 import { ElementSchemaRegistry } from '@angular/compiler';
+import { NavigationStart, Router } from '@angular/router';
 
 
 @Component({
@@ -55,7 +56,8 @@ export class ExplorerComponent implements OnInit {
 
   constructor(
     private alphaService: AlphaService,
-    private cnftService: CnftService
+    private cnftService: CnftService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -64,6 +66,12 @@ export class ExplorerComponent implements OnInit {
     this.looseFilters = this.cnftService.getFilterList();
     this.itemList = Object.keys(this.cnftService.getFilterList());
     this.itemsMap = this.alphaService.getItemsMap()
+
+    this.router.events.subscribe(event =>{
+      if ((event instanceof NavigationStart) && this.alphaSub){
+        this.alphaSub.unsubscribe()
+      }
+    })
 
     this.populate()
     //this.devPopulate()
@@ -138,7 +146,6 @@ export class ExplorerComponent implements OnInit {
 
   public applyFilters(){
     this.displayedUnits = this.displayedUnits.filter((unit) => this.listingPassed(unit))
-    this.applySort()
   }
 
   private compare(a: number | string, b: number | string, isAsc: boolean) {
@@ -227,6 +234,13 @@ export class ExplorerComponent implements OnInit {
     }
   }
 
+  public filter(){
+    this.page = 1; 
+    this.reset(); 
+    this.applyFilters()
+    this.applySort()
+  }
+
   public setSort(sort){
 
     if (this.sortBy != sort){
@@ -237,10 +251,10 @@ export class ExplorerComponent implements OnInit {
     
     if(this.sortBy == 'price' && sort != 'price'){
       this.reset()
-      this.applyFilters()
-    }
+    } 
 
     this.sortBy = sort;
+    this.applyFilters();
     this.applySort();
   }
 
