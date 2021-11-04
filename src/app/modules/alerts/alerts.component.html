@@ -75,7 +75,7 @@
         </div>
     </div>
 
-    <div *ngFor="let asset of this.listings" class='listing-card' (click)="openLink(asset.id)">
+    <div *ngFor="let asset of this.listings" class='listing-card' (click)="openLink(asset.listingId)">
 
         <div class='listing-card-details'>
             <div>{{asset.name}}</div>

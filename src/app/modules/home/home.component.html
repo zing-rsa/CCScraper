@@ -19,7 +19,7 @@
       <div class='field-container'>
         <label>Sort By:</label>
         <select (change)="selectSortOption($event.target.value)">
-          <option selected value="date">Date</option>
+          <option selected value="_id">Date</option>
           <option value="price">Price</option>
           <option value="unitNo">Unit Number</option>
         </select>
@@ -56,7 +56,7 @@
 <div id='scrollwindow' class="scroll-window">
   <div id='container' class="container">
     <div *ngFor="let asset of this.listings | cardFilter: this.filterList:this.sort:this.sortOrder" class='listing-card'
-      (click)="openLink(asset.id)">
+      (click)="openLink(asset.listingId)">
       <div class='listing-card-details'>
         <div>{{asset.name}}</div>
         <div>{{asset.price}}ADA</div>

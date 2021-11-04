@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   public cnftSub: Subscription;
 
   // Form fields
-  public sort = "date";
+  public sort = "_id";
   public sortOrder = "desc";
   public priceMin = '';
   public priceMax = '';
@@ -68,7 +68,8 @@ export class HomeComponent implements OnInit {
     this.poller = setInterval(function () {
       if ((self.container.scrollHeight - (self.scrollWindow.scrollTop + self.scrollWindow.clientHeight) < 1000
          || (self.sort == 'unitNo' && self.nextPage < 20))
-         && !(self.returnedResultsCount == 0)) {
+         && !(self.returnedResultsCount == 0)
+         && !self.fetchFailed) {
         if (!self.loading) {
           self.getListings()
         }
@@ -91,7 +92,7 @@ export class HomeComponent implements OnInit {
   }
 
   public openLink(id) {
-    window.open("https://cnft.io/token.php?id=" + id, "_blank")
+    window.open("https://cnft.io/token/" + id, "_blank")
   }
 
   public search() {
@@ -117,9 +118,9 @@ export class HomeComponent implements OnInit {
       this.cnftSub = this.cnftService.getListings(this.buildOptions())
         .subscribe(
           data => {
-            this.count = data.found
+//            this.count = data.found
             this.listings = this.listings.concat(this.parseListings(data))
-            this.returnedResultsCount = data.assets.length
+            this.returnedResultsCount = data.results.length
             this.fetchFailed = false;
             this.loading = false;
           },
@@ -139,7 +140,7 @@ export class HomeComponent implements OnInit {
 
     if (this.sort == 'unitNo') {
       options = {
-        sort: 'date',
+        sort: '_id',
         sortOrder: 'desc',
         priceMin: this.priceMin,
         priceMax: this.priceMax,
@@ -160,21 +161,21 @@ export class HomeComponent implements OnInit {
 
   private parseListings(listings) {
     var assets = []
-    for (let asset of listings.assets) {
+    for (let result of listings.results) {
       this.processedResults++;
 
       var newAsset = {
-        id: asset.id,
-        name: asset.metadata.files[0].name,
-        price: asset.price / 1000000,
-        numItems: asset.metadata.tags[5].numberOfItems,
+        listingId: result._id,
+        id: result.asset.assetId,
+        name: result.asset.metadata.files[0].name,
+        price: result.price / 1000000,
+        numItems: result.asset.metadata.numberOfItems,
         items: [],
         itemsMap: {}
       }
 
-      //if (!newAsset.name.includes("Poster") && !assets.find(el => el.name == newAsset.name)) {
       if (!newAsset.name.includes("Poster")) {
-        for (let item of asset.metadata.tags[3].contents) {
+        for (let item of result.asset.metadata.contents) {
           item['text'] = item.instances + " / " + item.name
           item['color'] = this.getItemColor(item.instances)
           newAsset['items'].push(item)
@@ -183,11 +184,8 @@ export class HomeComponent implements OnInit {
 
         newAsset['items'].sort((a, b) => a.instances - b.instances)
 
-        assets.push(newAsset) //move
+        assets.push(newAsset)
       }
-
-      // assets.push(newAsset)
-
     }
 
     return assets

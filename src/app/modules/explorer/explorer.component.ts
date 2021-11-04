@@ -315,7 +315,7 @@ export class ExplorerComponent implements OnInit {
   }
 
   public openListing(id) {
-    window.open("https://cnft.io/token.php?id=" + id, "_blank")
+    window.open("https://cnft.io/token/" + id, "_blank")
   }
 
   public openAsset(id) {

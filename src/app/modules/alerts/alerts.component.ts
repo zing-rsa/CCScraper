@@ -217,20 +217,21 @@ export class AlertsComponent implements OnInit {
 
   private parseListings(listings) {
     var assets = []
-    for (let asset of listings.assets) {
+    for (let result of listings.results) {
 
       var newAsset = {
-        id: asset.id,
-        name: asset.metadata.files[0].name,
-        price: asset.price / 1000000,
-        numItems: asset.metadata.tags[5].numberOfItems,
+        listingId: result._id,
+        id: result.asset.assetId,
+        name: result.asset.metadata.files[0].name,
+        price: result.price / 1000000,
+        numItems: result.asset.metadata.numberOfItems,
         items: [],
         itemsMap: {}
       }
 
       //if (!newAsset.name.includes("Poster") && !assets.find(el => el.name == newAsset.name)) {
       if (!newAsset.name.includes("Poster")) {
-        for (let item of asset.metadata.tags[3].contents) {
+        for (let item of result.asset.metadata.contents) {
           item['text'] = item.instances + " / " + item.name
           item['color'] = this.getItemColor(item.instances)
           newAsset['items'].push(item)
@@ -239,11 +240,8 @@ export class AlertsComponent implements OnInit {
 
         newAsset['items'].sort((a, b) => a.instances - b.instances)
 
-        assets.push(newAsset) //move
+        assets.push(newAsset)
       }
-
-      // assets.push(newAsset)
-
     }
 
     return assets
@@ -252,7 +250,7 @@ export class AlertsComponent implements OnInit {
   private buildOptions() {
 
     return {
-      sort: 'date',
+      sort: '_id',
       sortOrder: "desc",
       priceMin: 0,
       priceMax: 999999999999999,
@@ -319,7 +317,7 @@ export class AlertsComponent implements OnInit {
   }
 
   public openLink(id) {
-    window.open("https://cnft.io/token.php?id=" + id, "_blank")
+    window.open("https://cnft.io/token/" + id, "_blank")
   }
 
   onKeyMin(event) { this.priceMin = event.target.value; }
