@@ -143,12 +143,13 @@ export class CnftService {
             "search": "",
             "types": [
                 "listing",
-                "auction"
+                "auction",
+                "offer"
             ], 
             "project": "CardanoCity", 
             "sort": sort, 
-            "priceMin": (options.priceMin != null && options.priceMin != '' ? options.priceMin : 0), 
-            "priceMax": (options.priceMax != null && options.priceMax != '' ? options.priceMax : 999999999999999), 
+            "priceMin": (options.priceMin != null && options.priceMin != '' ? options.priceMin * 100000 : 0), 
+            "priceMax": (options.priceMax != null && options.priceMax != '' ? options.priceMax : 9999999999999999999), 
             "page": options.page, 
             "verified": true, 
             "nsfw": false, 
