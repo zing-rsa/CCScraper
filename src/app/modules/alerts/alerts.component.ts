@@ -253,7 +253,7 @@ export class AlertsComponent implements OnInit {
       sort: '_id',
       sortOrder: "desc",
       priceMin: 0,
-      priceMax: 999999999999999,
+      priceMax: null,
       page: 1
     }
   }
