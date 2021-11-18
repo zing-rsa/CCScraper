@@ -174,7 +174,7 @@ export class HomeComponent implements OnInit {
         itemsMap: {}
       }
 
-      if (!newAsset.name.includes("Poster")) {
+      if (!newAsset.name.includes("Poster") && !newAsset.name.includes("07907")) {
         for (let item of result.asset.metadata.contents) {
           item['text'] = item.instances + " / " + item.name
           item['color'] = this.getItemColor(item.instances)
