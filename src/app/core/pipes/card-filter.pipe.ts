@@ -6,12 +6,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CardFilterPipe implements PipeTransform {
 
-  transform(assets, filters, sort, order): unknown {
+  transform(assets, filters, sort, order, allowedTypes): unknown {
     
     var out = [];
 
     if (filters.length == 0){
-      out = assets;
+      out = assets.filter((a) => (allowedTypes.includes(a.type)));
     } else {
       var count = 0;
       for (let asset of assets){
@@ -22,7 +22,9 @@ export class CardFilterPipe implements PipeTransform {
           }
         }
         if (count == filters.length){
-          out.push(asset)
+          if (allowedTypes.includes(asset.type)){
+            out.push(asset)
+          }
         }
       }
     }
@@ -33,7 +35,6 @@ export class CardFilterPipe implements PipeTransform {
       } else {
         out.sort((a, b) => b.name.replace('Unit', '') - a.name.replace('Unit', ''))
       }
-      
     }
 
     return out;

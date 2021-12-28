@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
   public itemList;
   public filters = {};
   public filterList = [];
+  public allowedTypes = ["auction", "listing", "offer"];
 
   public loading = false;
   public showCheckBox = false;
@@ -88,6 +89,14 @@ export class HomeComponent implements OnInit {
           break;
         }
       }
+    }
+  }
+
+  public updateAllowedTypes(type){
+    if (this.allowedTypes.includes(type)){
+      this.allowedTypes.splice(this.allowedTypes.indexOf(type), 1)
+    } else {
+      this.allowedTypes.push(type)
     }
   }
 
@@ -170,6 +179,7 @@ export class HomeComponent implements OnInit {
         name: result.asset.metadata.files[0].name,
         price: result.price / 1000000,
         numItems: result.asset.metadata.numberOfItems,
+        type: result.type,
         items: [],
         itemsMap: {}
       }

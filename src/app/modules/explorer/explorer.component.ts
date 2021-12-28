@@ -46,6 +46,7 @@ export class ExplorerComponent implements OnInit {
   public looseFilterList = []
   public strictFilters = {}
   public looseFilters = {}
+  public allowedTypes = ["auction","offer", "listing"]
 
   public colorGradient = [
     "#ff9900",
@@ -125,6 +126,7 @@ export class ExplorerComponent implements OnInit {
         itemCount: this.data[listing].unit.contents.length,
         glitched: this.data[listing].unit.glitch != null ? "yes" : "no",
         listingId: this.data[listing].listing ? this.data[listing].listing.id : null,
+        listingType: this.data[listing].listing ? this.data[listing].listing.type : null,
         itemsMap: {},
         itemsList: []
       }
@@ -153,6 +155,10 @@ export class ExplorerComponent implements OnInit {
   }
 
   public listingPassed(listing){
+
+    if (!this.allowedTypes.includes(listing.listingType)){
+      return false
+    }
 
     if (this.priceMax != '') {
       if (!(listing.price <= this.priceMax) || listing.price == ''){
@@ -283,6 +289,14 @@ export class ExplorerComponent implements OnInit {
           }
         }
       }
+    }
+  }
+
+  public updateAllowedTypes(type) {
+    if (this.allowedTypes.includes(type)){
+      this.allowedTypes.splice(this.allowedTypes.indexOf(type), 1)
+    } else {
+      this.allowedTypes.push(type)
     }
   }
 

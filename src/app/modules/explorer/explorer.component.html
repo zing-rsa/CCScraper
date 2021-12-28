@@ -32,19 +32,19 @@
         <div class="field-group">
             <div class='field-container'>
                 <label>Price Min:</label>
-                <input (keyup)="onKeyMin($event)"> <br>
+                <input class='text-input' (keyup)="onKeyMin($event)"> <br>
             </div>
             <div class='field-container'>
                 <label>Price Max:</label>
-                <input (keyup)="onKeyMax($event)"> <br>
+                <input class='text-input' (keyup)="onKeyMax($event)"> <br>
             </div>
             <div class='field-container'>
                 <label>Min Unit Number:</label>
-                <input (keyup)="onKeyMinUnit($event)"> <br>
+                <input class='text-input' (keyup)="onKeyMinUnit($event)"> <br>
             </div>
             <div class='field-container'>
                 <label>Max Unit Number:</label>
-                <input (keyup)="onKeyMaxUnit($event)"> <br>
+                <input class='text-input' (keyup)="onKeyMaxUnit($event)"> <br>
             </div>
 
             <div class='field-container'>
@@ -56,7 +56,23 @@
                 <label>Includes either:</label>
                 <button (click)="toggleCheckboxList('loose')" [disabled]='this.showStrictCheckBox'>...</button><br>
             </div>
+            
         </div>
+        <div class="type-checkbox-container">
+            <div>
+                <label>Auctions:</label>
+                <input type='checkbox' [checked]="this.allowedTypes.includes('auction')" (click)="updateAllowedTypes('auction')">
+            </div>
+            <div>
+                <label>Offers:</label>
+                <input type='checkbox' [checked]="this.allowedTypes.includes('offer')" (click)="updateAllowedTypes('offer')">
+            </div>
+            <div>
+                <label>Listings:</label>
+                <input type='checkbox' [checked]="this.allowedTypes.includes('listing')" (click)="updateAllowedTypes('listing')">
+            </div>
+        </div>
+
         <button (click)="filter()">Apply</button>
 
     </div>

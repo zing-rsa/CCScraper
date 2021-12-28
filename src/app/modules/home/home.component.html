@@ -33,11 +33,11 @@
       </div>
       <div class='field-container'>
         <label>Price Min:</label>
-        <input (keyup)="onKeyMin($event)"> <br>
+        <input class='checkbox-input' (keyup)="onKeyMin($event)"> <br>
       </div>
       <div class='field-container'>
         <label>Price Max:</label>
-        <input (keyup)="onKeyMax($event)"> <br>
+        <input class='checkbox-input' (keyup)="onKeyMax($event)"> <br>
       </div>
     </div>
 
@@ -50,12 +50,27 @@
     </div>
   </div>
 
+  <div class="type-checkbox-container">
+    <div>
+        <label>Auctions:</label>
+        <input type='checkbox' [checked]="this.allowedTypes.includes('auction')" (click)="updateAllowedTypes('auction')">
+    </div>
+    <div>
+        <label>Offers:</label>
+        <input type='checkbox' [checked]="this.allowedTypes.includes('offer')" (click)="updateAllowedTypes('offer')">
+    </div>
+    <div>
+        <label>Listings:</label>
+        <input type='checkbox' [checked]="this.allowedTypes.includes('listing')" (click)="updateAllowedTypes('listing')">
+    </div>
+</div>
+
   <button (click)="search()">Search</button><br>
 
 </div>
 <div id='scrollwindow' class="scroll-window">
   <div id='container' class="container">
-    <div *ngFor="let asset of this.listings | cardFilter: this.filterList:this.sort:this.sortOrder" class='listing-card'
+    <div *ngFor="let asset of this.listings | cardFilter: this.filterList:this.sort:this.sortOrder:this.allowedTypes" class='listing-card'
       (click)="openLink(asset.listingId)">
       <div class='listing-card-details'>
         <div>{{asset.name}}</div>
